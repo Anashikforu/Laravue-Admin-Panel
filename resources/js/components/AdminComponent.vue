@@ -63,7 +63,7 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-icon class="mx-4">fab fa-youtube</v-icon>
       <v-toolbar-title class="mr-12 align-center">
-        <span class="title">Youtube</span>
+        <span class="title">Admin Panel</span>
       </v-toolbar-title>
       <v-spacer />
       <v-row
@@ -74,7 +74,7 @@
           :append-icon-cb="() => {}"
           placeholder="Search..."
           single-line
-          append-icon="search"
+          append-icon="mdi-search"
           color="white"
           hide-details
         />

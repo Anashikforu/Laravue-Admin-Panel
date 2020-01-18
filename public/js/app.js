@@ -19921,7 +19921,7 @@ var render = function() {
           _c("v-icon", { staticClass: "mx-4" }, [_vm._v("fab fa-youtube")]),
           _vm._v(" "),
           _c("v-toolbar-title", { staticClass: "mr-12 align-center" }, [
-            _c("span", { staticClass: "title" }, [_vm._v("Youtube")])
+            _c("span", { staticClass: "title" }, [_vm._v("Admin Panel")])
           ]),
           _vm._v(" "),
           _c("v-spacer"),
@@ -19938,7 +19938,7 @@ var render = function() {
                   "append-icon-cb": function() {},
                   placeholder: "Search...",
                   "single-line": "",
-                  "append-icon": "search",
+                  "append-icon": "mdi-search",
                   color: "white",
                   "hide-details": ""
                 }
