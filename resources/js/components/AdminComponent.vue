@@ -45,11 +45,11 @@
           </v-list-item-action>
           <v-list-item-title class="grey--text text--darken-1">Browse Channels</v-list-item-title>
         </v-list-item>
-        <v-list-item link>
+        <v-list-item link @click="logout">
           <v-list-item-action>
             <v-icon color="grey darken-1">mdi-settings</v-icon>
           </v-list-item-action>
-          <v-list-item-title class="grey--text text--darken-1">Manage Subscriptions</v-list-item-title>
+          <v-list-item-title class="grey--text text--darken-1">Logout</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -63,7 +63,7 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-icon class="mx-4">fab fa-youtube</v-icon>
       <v-toolbar-title class="mr-12 align-center">
-        <span class="title">Admin Panel</span>
+        <span class="title" style="color: white">Admin Panel</span>
       </v-toolbar-title>
       <v-spacer />
       <v-row
@@ -92,7 +92,7 @@
           <v-snackbar
                 v-model="snackbar"
                 >
-                {{ text }}
+                {{text}}
                 <v-btn
                     color="pink"
                     text
@@ -130,8 +130,22 @@ export default {
       ],
     }),
     created () {
-      this.$vuetify.theme.dark = true
+      this.$vuetify.theme.dark = false
+      this.text="You are Logged in successfully !!!";
+      this.snackbar = true
     },
+    methods: {
+        logout: function(){
+            localStorage.removeItem('token'),
+            this.$router.push('/login')
+                .then(res =>
+                {
+                    this.text="Logged out successfully!";
+                    this.snackbar=true;
+                })
+                .catch(err => console.log(err))
+        }
+    }
   }
 </script>
 <style lang="stylus" scoped>
