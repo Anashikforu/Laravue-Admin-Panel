@@ -119,7 +119,7 @@ export default {
         { icon: 'youtube-subscription', text: 'Subscriptions' },
         { icon: 'history', text: 'History' },
         { icon: 'playlist-music', text: 'Playlists' },
-        { icon: 'youtube-tv', text: 'Watch Later' },
+        { icon: 'youtube-tv', text: 'Roles' },
       ],
       items2: [
         { picture: 28, text: 'Joseph' },
@@ -131,8 +131,12 @@ export default {
     }),
     created () {
       this.$vuetify.theme.dark = false
-      this.text="You are Logged in successfully !!!";
-      this.snackbar = true
+
+    },
+    mounted(){
+        this.text="You are Logged in successfully !!!";
+        this.snackbar = localStorage.getItem('loggedin')
+        localStorage.removeItem('loggedin')
     },
     methods: {
         logout: function(){

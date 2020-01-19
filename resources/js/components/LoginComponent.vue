@@ -31,13 +31,18 @@
                     top
                     color="deep-purple accent-4"
                 ></v-progress-linear>
-                <v-form>
+                <v-form
+                ref="form"
+                v-model="valid"
+                >
                   <v-text-field
-                    label="Login"
+                    label="E-mail"
                     name="email"
                     v-model="email"
+                    :rules="emailRules"
+                    required
                     prepend-icon="mdi-account-circle-outline"
-                    type="eamil"
+                    type="email"
                   />
 
                   <v-text-field color="error"
@@ -47,12 +52,14 @@
                     v-model="password"
                     prepend-icon="mdi-lock"
                     type="password"
+                    :rules="passwordRules"
+                    required
                   />
                 </v-form>
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
-                <v-btn color="success" @click="login">Login</v-btn>
+                <v-btn :disabled="!valid" color="success" @click="login">Login</v-btn>
               </v-card-actions>
             </v-card>
             <v-snackbar
@@ -81,8 +88,16 @@ export default {
     },
     data() {
         return{
+            valid:true,
             eamil: '',
+            emailRules: [
+                v => !!v || 'E-mail is required',
+                v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+            ],
             password: '',
+            passwordRules: [
+                v => !!v || 'Password is required'
+            ],
             loading: false,
             snackbar: false,
             text: ''
@@ -113,6 +128,7 @@ export default {
             axios.post('/api/login',{'email': this.email, 'password': this.password})
             .then(res=>{
                 localStorage.setItem('token',res.data.token)
+                localStorage.setItem('loggedin',true)
                 this.$router.push('/admin')
                 .then(res => console.log('Logged in successfully!'))
                 .catch(err => console.log(err))
