@@ -74,7 +74,7 @@
           :append-icon-cb="() => {}"
           placeholder="Search..."
           single-line
-          append-icon="mdi-search"
+          append-icon="mdi-search-web"
           color="white"
           hide-details
         />
@@ -89,6 +89,18 @@
         >
           <v-col class="shrink">
           </v-col>
+          <v-snackbar
+                v-model="snackbar"
+                >
+                {{ text }}
+                <v-btn
+                    color="pink"
+                    text
+                    @click="snackbar = false"
+                >
+                    Close
+                </v-btn>
+            </v-snackbar>
         </v-row>
       </v-container>
     </v-content>
@@ -101,12 +113,13 @@ export default {
     },
     data: () => ({
       drawer: null,
+      snackbar: false,
       items: [
-        { icon: 'trending_up', text: 'Most Popular' },
-        { icon: 'subscriptions', text: 'Subscriptions' },
+        { icon: 'trending-up', text: 'Most Popular' },
+        { icon: 'youtube-subscription', text: 'Subscriptions' },
         { icon: 'history', text: 'History' },
-        { icon: 'featured_play_list', text: 'Playlists' },
-        { icon: 'watch_later', text: 'Watch Later' },
+        { icon: 'playlist-music', text: 'Playlists' },
+        { icon: 'youtube-tv', text: 'Watch Later' },
       ],
       items2: [
         { picture: 28, text: 'Joseph' },

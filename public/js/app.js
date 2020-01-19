@@ -2028,6 +2028,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     source: String
@@ -2035,20 +2047,21 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       drawer: null,
+      snackbar: false,
       items: [{
-        icon: 'trending_up',
+        icon: 'trending-up',
         text: 'Most Popular'
       }, {
-        icon: 'subscriptions',
+        icon: 'youtube-subscription',
         text: 'Subscriptions'
       }, {
         icon: 'history',
         text: 'History'
       }, {
-        icon: 'featured_play_list',
+        icon: 'playlist-music',
         text: 'Playlists'
       }, {
-        icon: 'watch_later',
+        icon: 'youtube-tv',
         text: 'Watch Later'
       }],
       items2: [{
@@ -2161,9 +2174,78 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     source: String
+  },
+  data: function data() {
+    return {
+      eamil: '',
+      password: '',
+      loading: false,
+      snackbar: false,
+      text: ''
+    };
+  },
+  methods: {
+    login: function login() {
+      var _this = this;
+
+      // Add a request interceptor
+      axios.interceptors.request.use(function (config) {
+        _this.loading = true;
+        return config;
+      }, function (error) {
+        _this.loading = false;
+        return Promise.reject(error);
+      }); // Add a response interceptor
+
+      axios.interceptors.response.use(function (response) {
+        _this.loading = false;
+        return response;
+      }, function (error) {
+        // Any status codes that falls outside the range of 2xx cause this function to trigger
+        // Do something with response error
+        _this.loading = false;
+        return Promise.reject(error);
+      });
+      axios.post('/api/login', {
+        'email': this.email,
+        'password': this.password
+      }).then(function (res) {
+        localStorage.setItem('token', res.data.token);
+
+        _this.$router.push('/admin').then(function (res) {
+          return console.log('Logged in successfully!');
+        })["catch"](function (err) {
+          return console.log(err);
+        });
+      })["catch"](function (err) {
+        _this.text = err.response.data.status;
+        _this.snackbar = true;
+      });
+    }
   }
 });
 
@@ -19938,7 +20020,7 @@ var render = function() {
                   "append-icon-cb": function() {},
                   placeholder: "Search...",
                   "single-line": "",
-                  "append-icon": "mdi-search",
+                  "append-icon": "mdi-search-web",
                   color: "white",
                   "hide-details": ""
                 }
@@ -19960,7 +20042,42 @@ var render = function() {
               _c(
                 "v-row",
                 { attrs: { justify: "center", align: "center" } },
-                [_c("v-col", { staticClass: "shrink" })],
+                [
+                  _c("v-col", { staticClass: "shrink" }),
+                  _vm._v(" "),
+                  _c(
+                    "v-snackbar",
+                    {
+                      model: {
+                        value: _vm.snackbar,
+                        callback: function($$v) {
+                          _vm.snackbar = $$v
+                        },
+                        expression: "snackbar"
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n              " +
+                          _vm._s(_vm.text) +
+                          "\n              "
+                      ),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "pink", text: "" },
+                          on: {
+                            click: function($event) {
+                              _vm.snackbar = false
+                            }
+                          }
+                        },
+                        [_vm._v("\n                  Close\n              ")]
+                      )
+                    ],
+                    1
+                  )
+                ],
                 1
               )
             ],
@@ -20056,25 +20173,51 @@ var render = function() {
                           _c(
                             "v-card-text",
                             [
+                              _c("v-progress-linear", {
+                                attrs: {
+                                  active: _vm.loading,
+                                  indeterminate: _vm.loading,
+                                  absolute: "",
+                                  top: "",
+                                  color: "deep-purple accent-4"
+                                }
+                              }),
+                              _vm._v(" "),
                               _c(
                                 "v-form",
                                 [
                                   _c("v-text-field", {
                                     attrs: {
                                       label: "Login",
-                                      name: "login",
-                                      "prepend-icon": "mdi-user",
-                                      type: "text"
+                                      name: "email",
+                                      "prepend-icon":
+                                        "mdi-account-circle-outline",
+                                      type: "eamil"
+                                    },
+                                    model: {
+                                      value: _vm.email,
+                                      callback: function($$v) {
+                                        _vm.email = $$v
+                                      },
+                                      expression: "email"
                                     }
                                   }),
                                   _vm._v(" "),
                                   _c("v-text-field", {
                                     attrs: {
+                                      color: "error",
                                       id: "password",
                                       label: "Password",
                                       name: "password",
                                       "prepend-icon": "mdi-lock",
                                       type: "password"
+                                    },
+                                    model: {
+                                      value: _vm.password,
+                                      callback: function($$v) {
+                                        _vm.password = $$v
+                                      },
+                                      expression: "password"
                                     }
                                   })
                                 ],
@@ -20089,11 +20232,53 @@ var render = function() {
                             [
                               _c("v-spacer"),
                               _vm._v(" "),
-                              _c("v-btn", { attrs: { color: "success" } }, [
-                                _vm._v("Login")
-                              ])
+                              _c(
+                                "v-btn",
+                                {
+                                  attrs: { color: "success" },
+                                  on: { click: _vm.login }
+                                },
+                                [_vm._v("Login")]
+                              )
                             ],
                             1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-snackbar",
+                        {
+                          model: {
+                            value: _vm.snackbar,
+                            callback: function($$v) {
+                              _vm.snackbar = $$v
+                            },
+                            expression: "snackbar"
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n              " +
+                              _vm._s(_vm.text) +
+                              "\n              "
+                          ),
+                          _c(
+                            "v-btn",
+                            {
+                              attrs: { color: "pink", text: "" },
+                              on: {
+                                click: function($event) {
+                                  _vm.snackbar = false
+                                }
+                              }
+                            },
+                            [
+                              _vm._v(
+                                "\n                  Close\n              "
+                              )
+                            ]
                           )
                         ],
                         1
@@ -76607,7 +76792,14 @@ var routes = [{
 }, {
   path: '/admin',
   component: _components_AdminComponent__WEBPACK_IMPORTED_MODULE_3__["default"],
-  name: 'Admin'
+  name: 'Admin',
+  beforeEnter: function beforeEnter(to, from, next) {
+    if (localStorage.getItem('token')) {
+      next();
+    } else {
+      next('/login');
+    }
+  }
 }];
 /* harmony default export */ __webpack_exports__["default"] = (new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   routes: routes
@@ -76653,8 +76845,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuetify__WEBPACK_IMPORTED_MODULE_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\xampp\htdocs\Laravue-Admin-Panel\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\xampp\htdocs\Laravue-Admin-Panel\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\xampp\htdocs\laravue\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\laravue\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
