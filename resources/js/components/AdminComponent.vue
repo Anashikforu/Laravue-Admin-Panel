@@ -10,6 +10,7 @@
           v-for="item in items"
           :key="item.text"
           link
+          :to="item.action"
         >
           <v-list-item-action>
             <v-icon>mdi-{{ item.icon }}</v-icon>
@@ -82,14 +83,15 @@
     </v-app-bar>
 
     <v-content>
-      <v-container class="fill-height">
+      <v-container class=" ">
+        <router-view></router-view>
         <v-row
           justify="center"
           align="center"
         >
           <v-col class="shrink">
-          </v-col>
-          <v-snackbar
+
+              <v-snackbar
                 v-model="snackbar"
                 >
                 {{text}}
@@ -100,7 +102,8 @@
                 >
                     Close
                 </v-btn>
-            </v-snackbar>
+              </v-snackbar>
+          </v-col>
         </v-row>
       </v-container>
     </v-content>
@@ -115,11 +118,11 @@ export default {
       drawer: null,
       snackbar: false,
       items: [
-        { icon: 'trending-up', text: 'Most Popular' },
-        { icon: 'youtube-subscription', text: 'Subscriptions' },
-        { icon: 'history', text: 'History' },
-        { icon: 'playlist-music', text: 'Playlists' },
-        { icon: 'youtube-tv', text: 'Roles' },
+        { icon: 'account', text: 'Users', action: '/admin/users'},
+        { icon: 'post-outline', text: 'Post',action: '/admin/posts' },
+        { icon: 'circle-edit-outline', text: 'Pages',action: '/admin/pages' },
+        { icon: 'briefcase-edit-outline', text: 'Categories',action: '/admin/categories' },
+        { icon: 'account-badge-outline', text: 'Roles',action: '/admin/roles' },
       ],
       items2: [
         { picture: 28, text: 'Joseph' },
@@ -130,8 +133,7 @@ export default {
       ],
     }),
     created () {
-      this.$vuetify.theme.dark = false
-
+      this.$vuetify.theme.dark = true
     },
     mounted(){
         this.text="You are Logged in successfully !!!";
