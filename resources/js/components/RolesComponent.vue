@@ -9,7 +9,7 @@
   >
     <template v-slot:top>
       <v-toolbar flat color="white">
-        <v-toolbar-title> </v-toolbar-title>
+        <v-toolbar-title>Role </v-toolbar-title>
         <v-divider
           class="mx-4"
           inset
@@ -18,7 +18,7 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
-            <v-btn color="primary" dark class="mb-2" v-on="on">New User</v-btn>
+            <v-btn color="error" dark class="mb-2" v-on="on">Add New Role</v-btn>
           </template>
           <v-card>
             <v-card-title>
@@ -28,10 +28,10 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
+                  <v-col cols="12" sm="12" md="12">
+                    <v-text-field color="error" v-model="editedItem.name" label="Role Name"></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="6" md="4">
+                  <!-- <v-col cols="12" sm="6" md="4">
                     <v-text-field v-model="editedItem.created_at" label="Created at"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
@@ -39,15 +39,15 @@
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
-                  </v-col>
+                  </v-col> -->
                 </v-row>
               </v-container>
             </v-card-text>
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+              <v-btn color="error darken-1" text @click="close">Cancel</v-btn>
+              <v-btn color="error darken-1" text @click="save">Save</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -69,7 +69,7 @@
       </v-icon>
     </template>
     <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize">Reset</v-btn>
+      <v-btn color="error" @click="initialize">Reset</v-btn>
     </template>
     </v-data-table>
 </template>
@@ -93,24 +93,26 @@
       roles: [],
       editedIndex: -1,
       editedItem: {
+        id: '',
         name: '',
-        created_at: 0,
-        updated_at: 0,
-        carbs: 0,
+        created_at: '',
+        updated_at: '',
+
 
       },
       defaultItem: {
+        id: '',
         name: '',
-        created_at: 0,
-        updated_at: 0,
-        carbs: 0,
+        created_at: '',
+        updated_at: '',
+
 
       },
     }),
 
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+        return this.editedIndex === -1 ? 'New Role' : 'Edit Role'
       },
     },
 
@@ -158,14 +160,14 @@
 
 
       editItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
+        this.editedIndex = this.roles.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
 
       deleteItem (item) {
-        const index = this.desserts.indexOf(item)
-        confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
+        const index = this.roles.indexOf(item)
+        confirm('Are you sure you want to delete this item?') && this.roles.splice(index, 1)
       },
 
       close () {
@@ -177,10 +179,17 @@
       },
 
       save () {
+
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+        axios.put('/api/roles/'+this.editedIndex,{'name': this.editedItem.name})
+          .then(res=>Object.assign(this.roles[this.editedIndex],res.data.roles))
+          .catch(err=> console.log(err.response))
+        //   Object.assign(this.roles[this.editedIndex], this.editedItem)
         } else {
-          this.desserts.push(this.editedItem)
+        axios.post('/api/roles',{'name': this.editedItem.name})
+          .then(res=>this.roles.push(res.data.roles))
+          .catch(err=> console.dir(err.response))
+
         }
         this.close()
       },

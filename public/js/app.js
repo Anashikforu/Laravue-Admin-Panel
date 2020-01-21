@@ -2404,22 +2404,22 @@ __webpack_require__.r(__webpack_exports__);
       roles: [],
       editedIndex: -1,
       editedItem: {
+        id: '',
         name: '',
-        created_at: 0,
-        updated_at: 0,
-        carbs: 0
+        created_at: '',
+        updated_at: ''
       },
       defaultItem: {
+        id: '',
         name: '',
-        created_at: 0,
-        updated_at: 0,
-        carbs: 0
+        created_at: '',
+        updated_at: ''
       }
     };
   },
   computed: {
     formTitle: function formTitle() {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item';
+      return this.editedIndex === -1 ? 'New Role' : 'Edit Role';
     }
   },
   watch: {
@@ -2461,13 +2461,13 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     editItem: function editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      this.editedIndex = this.roles.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
     deleteItem: function deleteItem(item) {
-      var index = this.desserts.indexOf(item);
-      confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1);
+      var index = this.roles.indexOf(item);
+      confirm('Are you sure you want to delete this item?') && this.roles.splice(index, 1);
     },
     close: function close() {
       var _this2 = this;
@@ -2479,10 +2479,24 @@ __webpack_require__.r(__webpack_exports__);
       }, 300);
     },
     save: function save() {
+      var _this3 = this;
+
       if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
+        axios.put('/api/roles/' + this.editedIndex, {
+          'name': this.editedItem.name
+        }).then(function (res) {
+          return Object.assign(_this3.roles[_this3.editedIndex], res.data.roles);
+        })["catch"](function (err) {
+          return console.log(err.response);
+        }); //   Object.assign(this.roles[this.editedIndex], this.editedItem)
       } else {
-        this.desserts.push(this.editedItem);
+        axios.post('/api/roles', {
+          'name': this.editedItem.name
+        }).then(function (res) {
+          return _this3.roles.push(res.data.roles);
+        })["catch"](function (err) {
+          return console.dir(err.response);
+        });
       }
 
       this.close();
@@ -20612,7 +20626,7 @@ var render = function() {
               "v-toolbar",
               { attrs: { flat: "", color: "white" } },
               [
-                _c("v-toolbar-title"),
+                _c("v-toolbar-title", [_vm._v("Role ")]),
                 _vm._v(" "),
                 _c("v-divider", {
                   staticClass: "mx-4",
@@ -20636,11 +20650,11 @@ var render = function() {
                               _vm._g(
                                 {
                                   staticClass: "mb-2",
-                                  attrs: { color: "primary", dark: "" }
+                                  attrs: { color: "error", dark: "" }
                                 },
                                 on
                               ),
-                              [_vm._v("New User")]
+                              [_vm._v("Add New Role")]
                             )
                           ]
                         }
@@ -20677,11 +20691,18 @@ var render = function() {
                                     _c(
                                       "v-col",
                                       {
-                                        attrs: { cols: "12", sm: "6", md: "4" }
+                                        attrs: {
+                                          cols: "12",
+                                          sm: "12",
+                                          md: "12"
+                                        }
                                       },
                                       [
                                         _c("v-text-field", {
-                                          attrs: { label: "Name" },
+                                          attrs: {
+                                            color: "error",
+                                            label: "Role Name"
+                                          },
                                           model: {
                                             value: _vm.editedItem.name,
                                             callback: function($$v) {
@@ -20692,78 +20713,6 @@ var render = function() {
                                               )
                                             },
                                             expression: "editedItem.name"
-                                          }
-                                        })
-                                      ],
-                                      1
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "v-col",
-                                      {
-                                        attrs: { cols: "12", sm: "6", md: "4" }
-                                      },
-                                      [
-                                        _c("v-text-field", {
-                                          attrs: { label: "Created at" },
-                                          model: {
-                                            value: _vm.editedItem.created_at,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.editedItem,
-                                                "created_at",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "editedItem.created_at"
-                                          }
-                                        })
-                                      ],
-                                      1
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "v-col",
-                                      {
-                                        attrs: { cols: "12", sm: "6", md: "4" }
-                                      },
-                                      [
-                                        _c("v-text-field", {
-                                          attrs: { label: "Updated at" },
-                                          model: {
-                                            value: _vm.editedItem.updated_at,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.editedItem,
-                                                "updated_at",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "editedItem.updated_at"
-                                          }
-                                        })
-                                      ],
-                                      1
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "v-col",
-                                      {
-                                        attrs: { cols: "12", sm: "6", md: "4" }
-                                      },
-                                      [
-                                        _c("v-text-field", {
-                                          attrs: { label: "Carbs (g)" },
-                                          model: {
-                                            value: _vm.editedItem.carbs,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.editedItem,
-                                                "carbs",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "editedItem.carbs"
                                           }
                                         })
                                       ],
@@ -20787,7 +20736,7 @@ var render = function() {
                             _c(
                               "v-btn",
                               {
-                                attrs: { color: "blue darken-1", text: "" },
+                                attrs: { color: "error darken-1", text: "" },
                                 on: { click: _vm.close }
                               },
                               [_vm._v("Cancel")]
@@ -20796,7 +20745,7 @@ var render = function() {
                             _c(
                               "v-btn",
                               {
-                                attrs: { color: "blue darken-1", text: "" },
+                                attrs: { color: "error darken-1", text: "" },
                                 on: { click: _vm.save }
                               },
                               [_vm._v("Save")]
@@ -20857,7 +20806,7 @@ var render = function() {
           return [
             _c(
               "v-btn",
-              { attrs: { color: "primary" }, on: { click: _vm.initialize } },
+              { attrs: { color: "error" }, on: { click: _vm.initialize } },
               [_vm._v("Reset")]
             )
           ]
@@ -77452,16 +77401,14 @@ var routes = [{
     path: 'roles',
     component: _components_RolesComponent__WEBPACK_IMPORTED_MODULE_4__["default"],
     name: 'Roles'
-  }] // beforeEnter: (to, from, next) => {
-  //     if (localStorage.getItem('token'))
-  //     {
-  //         next()
-  //     }
-  //     else{
-  //         next('/login');
-  //     }
-  //   }
-
+  }],
+  beforeEnter: function beforeEnter(to, from, next) {
+    axios.get('api/verify').then(function (res) {
+      return next();
+    })["catch"](function (err) {
+      return next('/login');
+    });
+  }
 }];
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   routes: routes

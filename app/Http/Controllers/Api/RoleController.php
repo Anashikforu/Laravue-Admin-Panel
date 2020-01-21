@@ -38,6 +38,11 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         //
+        $role =Role::create([
+            'name'=> $request->name,
+        ]);
+
+        return response()->json(['roles'=>$role],200);
     }
 
     /**
@@ -69,9 +74,12 @@ class RoleController extends Controller
      * @param  \App\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Role $role)
+    public function update(Request $request, $role)
     {
         //
+        $role = Role::find($role)->update(['name' => $request->name]);
+
+        return response()->json(['roles'=>$role],200);
     }
 
     /**
